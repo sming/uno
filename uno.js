@@ -1,6 +1,8 @@
 var express = require('express');
-var card = require('./card.js');
+var deck = require('./deck.js');
+
 var app = express();
+
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', function(req, res){ 
@@ -8,14 +10,19 @@ app.get('/', function(req, res){
     res.send('Uno');
 });
 
-app.get('/card/next', function(req, res){
-	res.json(card.next());
+app.get('/deck', function(req, res) {
+	res.json(deck.buildEntireDeck());
+});
+
+app.get('/deck/shuffle', function(req, res) {
+	res.json(deck.shuffle());
 });
 
 app.listen(app.get('port'), function(){
 	console.log( 'Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.' );
 });
 
+// This has to go last or else everything is treated as an error
 require('./errorHandling.js').register(app);
 
 //console.log();
