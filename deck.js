@@ -6,11 +6,13 @@ var allFaces = faces.concat(specials);
 
 var deck = [];
 
+var currCardIdx = -1;
+
 debug = true;
 
 function buildEntireDeck() {
 	if (deck.length > 0) {
-		return;
+		return deck;
 	}
 
 	var f, len;
@@ -27,21 +29,33 @@ function buildEntireDeck() {
 	return deck;
 }
 
+// from http://allFaceslgs4.cs.princeton.edu/11model/Knuth.java.html
 function shuffle() {
 	buildEntireDeck();
-	var a = deck;
-    var N = a.length;
+    var N = deck.length;
     var i = 0;
     for (; i < N; i++) {
         // choose index uniformly in [i, N-1]
         var r = i + parseInt(Math.random() * (N - i), 10);
-        var swap = a[r];
-        a[r] = a[i];
-        a[i] = swap;
+        var swap = deck[r];
+        deck[r] = deck[i];
+        deck[i] = swap;
     }
-
+				
     logToConsole();
 	return deck;
+}
+
+function next() {
+	buildEntireDeck();
+
+	if (++currCardIdx > deck.length) {
+		console.log("Reached the end of the deck! Shuffling.");
+		shuffle();
+		currCardIdx = 0;
+	}
+
+	return deck[currCardIdx];
 }
 
 function logToConsole() {
@@ -57,3 +71,4 @@ function logToConsole() {
 module.exports.buildEntireDeck = buildEntireDeck;
 module.exports.shuffle = shuffle;
 module.exports.debug = debug;
+module.exports.next = next;
